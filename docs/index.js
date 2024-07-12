@@ -4,7 +4,9 @@
 */
 
 function reverseString(str) {
-  // Tu solución acá  
+  // Tu solución acá
+  const newStr = str.split('').reverse().join('');
+  return newStr;
 }
 
 /*
@@ -32,7 +34,6 @@ function isPalindrome(str) {
 function closestPair(arr) {
   // Tu solución acá
 }
-
 
 /*
   Ejercicio 4: Calculadora - Programación Orientada a Objetos
@@ -75,4 +76,4 @@ module.exports = {
   isPalindrome,
   reverseString,
   Calculator,
-}
+};
