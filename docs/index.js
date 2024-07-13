@@ -97,7 +97,69 @@ function closestPair(arr) {
 
 class Calculator {
   // Tu solución acá
+
+  constructor() {
+    this.lastCalculatedResult = 0;
+  }
+
+  inputValidation(a, b) {
+    if (typeof a !== 'number' || typeof b !== 'number') {
+      throw new Error('Inputs must be numbers');
+    }
+  }
+
+  add(a, b) {
+    this.inputValidation(a, b);
+    this.lastCalculatedResult = a + b;
+    return this.lastCalculatedResult;
+  }
+
+  subtract(a, b) {
+    this.inputValidation(a, b);
+    this.lastCalculatedResult = a - b;
+    return this.lastCalculatedResult;
+  }
+
+  multiply(a, b) {
+    this.inputValidation(a, b);
+    this.lastCalculatedResult = a * b;
+    return this.lastCalculatedResult;
+  }
+
+  divide(a, b) {
+    this.inputValidation(a, b);
+    if (b === 0) {
+      throw new Error('Division by zero is not allowed');
+    }
+    this.lastCalculatedResult = a / b;
+    return this.lastCalculatedResult;
+  }
+
+  getLastResult() {
+    return this.lastCalculatedResult;
+  }
 }
+
+Calculator.prototype.exponentiate = function (base, exponent) {
+  this.inputValidation(base, exponent);
+  if (exponent === 0) {
+    this.lastCalculatedResult = 1;
+  } else if (exponent < 0) {
+    throw new Error('Exponentiation with negative exponent is not allowed');
+  } else {
+    this.lastCalculatedResult = base ** exponent;
+  }
+
+  return this.lastCalculatedResult;
+};
+
+// const calc = new Calculator();
+
+// console.log(calc.add(5, 4));
+// console.log(calc.add(5, 'b'));
+// console.log(calc.getLastResult());
+// console.log(calc.exponentiate(2, 3));
+// console.log(calc.exponentiate(2, 'b'));
 
 module.exports = {
   closestPair,
