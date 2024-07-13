@@ -16,6 +16,12 @@ function reverseString(str) {
 */
 function isPalindrome(str) {
   // Tu solución acá
+  const newStr = str.split('').reverse().join('');
+  if (newStr === str) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 /*
@@ -33,7 +39,29 @@ function isPalindrome(str) {
 
 function closestPair(arr) {
   // Tu solución acá
+  // validation
+  if (arr.length < 2) {
+    return false;
+  }
+
+  // sorting
+  const sortedArr = arr.sort((a, b) => a - b);
+  let minDiff = Infinity; // valor numerico infinito
+  let minPair = [sortedArr[0], sortedArr[1]];
+
+  for (let i = 0; i < sortedArr.length - 1; i++) {
+    const difference = sortedArr[i + 1] - sortedArr[i];
+    // console.log(difference);
+    if (difference < minDiff) {
+      minDiff = difference;
+      minPair = [sortedArr[i], sortedArr[i + 1]];
+    }
+  }
+
+  return minPair;
 }
+
+// console.log(closestPair([4, 2, 1, 7, 9, 10]));
 
 /*
   Ejercicio 4: Calculadora - Programación Orientada a Objetos
