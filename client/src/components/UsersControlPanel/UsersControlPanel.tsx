@@ -1,10 +1,22 @@
 import { Breadcrumb, Select, Button, Input } from 'antd';
+import styles from './UsersControlPanel.module.css';
+import CustomModal from '../CustomModal/CustomModal';
 
 const { Search } = Input;
 
-import styles from './UsersControlPanel.module.css';
+type UsersControlPanelProps = {
+  isModalOpen: boolean;
+  handleOpenModal: (mode: string) => void;
+  mode: string;
+  handleCloseModal: () => void;
+};
 
-export default function UsersControlPanel() {
+export default function UsersControlPanel({
+  isModalOpen,
+  handleOpenModal,
+  mode,
+  handleCloseModal,
+}: UsersControlPanelProps) {
   return (
     <>
       <Breadcrumb className={styles.breadCrumb}>
@@ -24,8 +36,18 @@ export default function UsersControlPanel() {
             className={styles.select}
           />
         </div>
-        <Button type='primary'>Agregar usuario</Button>
+        <Button type='primary' onClick={() => handleOpenModal('add')}>
+          Agregar usuario
+        </Button>
       </div>
+
+      {isModalOpen && mode === 'add' && (
+        <CustomModal
+          isModalOpen={isModalOpen}
+          mode={'add'}
+          handleCloseModal={handleCloseModal}
+        />
+      )}
     </>
   );
 }

@@ -2,82 +2,102 @@ import { Space, Table, Tag } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 
 import styles from './UsersTable.module.css';
+import { useUsersContext } from '../../lib/hooks';
+// import { useState } from 'react';
+import CustomModal from '../CustomModal/CustomModal';
 
 interface DataType {
-  key: number;
-  usuario: string;
-  nombre: string;
-  apellido: string;
-  estado: string;
+  id: number;
+  username: string;
+  name: string;
+  lastname: string;
+  status: string;
 }
 
-const dataSource = [
-  {
-    key: 1,
-    usuario: 'Gonzalo123',
-    nombre: 'Gonzalo',
-    apellido: 'text',
-    estado: 'Activo',
-  },
-  {
-    key: 2,
-    usuario: 'Gonzalo1232',
-    nombre: 'Gonzalo',
-    apellido: 'text',
-    estado: 'Inactivo',
-  },
-];
+type UsersTableProps = {
+  isModalOpen: boolean;
+  mode: string;
+  handleOpenModal: (mode: string) => void;
+  handleCloseModal: () => void;
+};
 
-const columns: ColumnsType<DataType> = [
-  {
-    title: 'Usuario',
-    dataIndex: 'usuario',
-    key: 'usuario',
-    width: '30%',
-  },
-  {
-    title: 'Nombre',
-    dataIndex: 'nombre',
-    key: 'nombre',
-    width: '30%',
-  },
-  {
-    title: 'Apellido',
-    dataIndex: 'apellido',
-    key: 'apellido',
-    width: '30%',
-  },
-  {
-    title: 'Estado',
-    dataIndex: 'estado',
-    key: 'estado',
-    render: (text: string) => (
-      <Tag color={text === 'Activo' ? 'green' : 'red'}>{text}</Tag>
-    ),
-    width: '5%',
-  },
-  {
-    title: 'Acciones',
-    key: 'action',
-    render: () => (
-      <Space size='middle'>
-        <a>Editar</a>
-        <a>Eliminar</a>
-      </Space>
-    ),
-    width: '5%',
-  },
-];
+export default function UsersTable({
+  isModalOpen,
+  mode,
+  handleOpenModal,
+  handleCloseModal,
+}: UsersTableProps) {
+  const { users, handleActiveIdChange, isLoading } = useUsersContext();
 
-export default function UsersTable() {
+  const columns: ColumnsType<DataType> = [
+    {
+      title: 'Usuario',
+      dataIndex: 'username',
+      key: 'username',
+      width: '30%',
+    },
+    {
+      title: 'Nombre',
+      dataIndex: 'name',
+      key: 'name',
+      width: '30%',
+    },
+    {
+      title: 'Apellido',
+      dataIndex: 'lastname',
+      key: 'lastname',
+      width: '30%',
+    },
+    {
+      title: 'Estado',
+      dataIndex: 'status',
+      key: 'status',
+      render: (text: string) => (
+        <Tag color={text === 'active' ? 'green' : 'red'}>
+          {text === 'active' ? 'Activo' : 'Inactivo'}
+        </Tag>
+      ),
+      width: '5%',
+    },
+    {
+      title: 'Acciones',
+      key: 'action',
+      render: (_, record: DataType) => (
+        <Space size='middle'>
+          <a
+            onClick={() => {
+              handleActiveIdChange(record.id);
+              // console.log(record.id);
+              handleOpenModal('edit');
+            }}
+          >
+            Editar
+          </a>
+          <a>Eliminar</a>
+        </Space>
+      ),
+      width: '5%',
+    },
+  ];
+
   return (
     <>
       <Table
-        dataSource={dataSource}
+        rowKey={(record) => record.id}
+        dataSource={users}
         columns={columns}
         className={styles.table}
-        pagination={{ pageSize: 5 }}
+        pagination={{ pageSize: 9 }}
+        loading={isLoading}
       />
+
+      {isModalOpen && mode === 'edit' && (
+        <CustomModal
+          isModalOpen={isModalOpen}
+          mode={'edit'}
+          handleCloseModal={handleCloseModal}
+        />
+      )}
     </>
   );
 }
