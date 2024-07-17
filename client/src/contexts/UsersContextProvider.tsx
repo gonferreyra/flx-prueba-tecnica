@@ -1,6 +1,6 @@
 import { createContext, useEffect, useReducer, useState } from 'react';
 import { userReducer } from './usersReducer';
-import { User } from '../interfaces/interface';
+import { FormState, User } from '../interfaces/interface';
 
 type State = {
   users: User[];
@@ -12,6 +12,7 @@ type State = {
 const INITIAL_STATE: State = {
   users: [],
   isLoading: false,
+  // Chequear si lo vamos a usar o no-------------------------------
   currentUser: null,
   error: '',
 };
@@ -20,9 +21,12 @@ type UserContextStore = {
   users: User[];
   activeId: number | null;
   handleActiveIdChange: (id: number) => void;
-  getUser: (id: number) => Promise<void>;
+  getUser: (id: number) => Promise<User>;
   isLoading: boolean;
   currentUser: User | null;
+  createUser: (user: User) => Promise<void>;
+  deleteUser: (id: number) => Promise<void>;
+  updateUser: (id: number, user: FormState) => Promise<void>;
 };
 
 export const UsersContext = createContext<UserContextStore | null>(null);
@@ -66,8 +70,9 @@ export default function UsersContextProvider({
     }, 1500);
   }, [baseURL]);
 
+  // Ver el timeout para esta funcion
   const getUser = async (id: number) => {
-    if (id === currentUser?.id) return;
+    // if (id === currentUser?.id) return;
 
     dispatch({ type: 'isLoading' });
 
@@ -75,13 +80,73 @@ export default function UsersContextProvider({
       const res = await fetch(`${baseURL}/${id}`);
       const data = await res.json();
       dispatch({ type: 'user/loaded', payload: data });
-      // return data;
+      return data;
     } catch (error) {
       dispatch({
         type: 'rejected',
         payload: 'There was an error loading the user',
       });
       // return null;
+    }
+  };
+
+  const createUser = async (user: User) => {
+    dispatch({ type: 'isLoading' });
+
+    try {
+      const res = await fetch(`${baseURL}/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+      });
+      const data = await res.json();
+
+      dispatch({ type: 'user/created', payload: data });
+    } catch (error) {
+      dispatch({
+        type: 'rejected',
+        payload: 'There was an error creating the user',
+      });
+    }
+  };
+
+  const deleteUser = async (id: number) => {
+    dispatch({ type: 'isLoading' });
+
+    try {
+      // const res =
+      await fetch(`${baseURL}/${id}`, {
+        method: 'DELETE',
+      });
+
+      dispatch({ type: 'user/delete', payload: id });
+    } catch (error) {
+      dispatch({
+        type: 'rejected',
+        payload: 'There was an error deleting the user',
+      });
+    }
+  };
+
+  const updateUser = async (id: number, user: FormState) => {
+    dispatch({ type: 'isLoading' });
+
+    try {
+      await fetch(`${baseURL}/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+      });
+      dispatch({ type: 'user/update', payload: { ...user, id } });
+    } catch (error) {
+      dispatch({
+        type: 'rejected',
+        payload: 'There was an error updating the user',
+      });
     }
   };
 
@@ -94,6 +159,9 @@ export default function UsersContextProvider({
         getUser,
         currentUser,
         isLoading,
+        createUser,
+        deleteUser,
+        updateUser,
       }}
     >
       {children}

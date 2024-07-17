@@ -4,6 +4,9 @@ type ReducerActions =
   | { type: 'isLoading' }
   | { type: 'users/loaded'; payload: User[] }
   | { type: 'user/loaded'; payload: User }
+  | { type: 'user/created'; payload: User }
+  | { type: 'user/delete'; payload: number }
+  | { type: 'user/update'; payload: User }
   | { type: 'rejected'; payload: string };
 
 type state = {
@@ -28,6 +31,28 @@ export const userReducer = (state: state, action: ReducerActions) => {
         ...state,
         isLoading: false,
         currentUser: action.payload,
+      };
+    case 'user/created':
+      return {
+        ...state,
+        isLoading: false,
+        users: [...state.users, action.payload],
+      };
+    case 'user/delete':
+      return {
+        ...state,
+        isLoading: false,
+        users: [...state.users.filter((user) => user.id !== action.payload)],
+      };
+    case 'user/update':
+      return {
+        ...state,
+        isLoading: false,
+        users: [
+          ...state.users.map((user) =>
+            user.id === action.payload.id ? action.payload : user
+          ),
+        ],
       };
     case 'rejected':
       return {
