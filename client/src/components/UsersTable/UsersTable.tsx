@@ -73,7 +73,15 @@ export default function UsersTable({
           >
             Editar
           </a>
-          <a>Eliminar</a>
+          <a
+            onClick={() => {
+              handleActiveIdChange(record.id);
+              handleOpenModal('delete');
+              // console.log(record.id);
+            }}
+          >
+            Eliminar
+          </a>
         </Space>
       ),
       width: '5%',
@@ -91,10 +99,16 @@ export default function UsersTable({
         loading={isLoading}
       />
 
-      {isModalOpen && mode === 'edit' && (
+      {isModalOpen && mode === 'edit' ? (
         <CustomModal
           isModalOpen={isModalOpen}
           mode={'edit'}
+          handleCloseModal={handleCloseModal}
+        />
+      ) : (
+        <CustomModal
+          isModalOpen={isModalOpen}
+          mode={'delete'}
           handleCloseModal={handleCloseModal}
         />
       )}
