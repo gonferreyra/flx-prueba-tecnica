@@ -1,0 +1,12 @@
+.title {
+  font-weight: 400;
+}
+
+.divider {
+  margin: 1rem 0;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: flex-end;
+}

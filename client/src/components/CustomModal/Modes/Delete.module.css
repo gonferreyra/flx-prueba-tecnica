@@ -1,0 +1,21 @@
+.title {
+  font-weight: 400;
+}
+
+.text {
+  padding: 2rem 0;
+}
+
+.span {
+  color: red;
+}
+
+.divider {
+  margin: 1rem 0;
+}
+
+.btn-container {
+  display: flex;
+  flex-direction: flex-end;
+  gap: 2rem;
+}

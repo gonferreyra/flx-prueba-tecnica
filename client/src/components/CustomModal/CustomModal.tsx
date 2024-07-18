@@ -7,6 +7,8 @@ import EditModeComponent from './Modes/Edit';
 import AddModeComponent from './Modes/Add';
 import { generateUUID, isEmailRegistered, validateForm } from '../../lib/utils';
 
+import styles from './CustomModal.module.css';
+
 const { Title } = Typography;
 
 type CustomModalProps = {
@@ -32,8 +34,6 @@ export default function CustomModal({
   const { getUser, activeId, createUser, users, deleteUser, updateUser } =
     useUsersContext();
 
-  // console.log(activeId);
-
   const {
     formState,
     setFormState,
@@ -43,6 +43,8 @@ export default function CustomModal({
   } = useForm<FormState>(initialState);
 
   const { username, email, name, lastname, status, age } = formState;
+
+  // console.log(formState);
 
   const handleSubmit = async () => {
     // validations
@@ -73,12 +75,11 @@ export default function CustomModal({
 
     await createUser(newUser);
 
-    onResetForm();
-
-    await message.success('User created successfully');
-
     // close modal & reset fields
     handleCloseModal();
+    onResetForm();
+
+    message.success('User created successfully');
   };
 
   const onUserDelete = async (id: number) => {
@@ -137,19 +138,21 @@ export default function CustomModal({
   };
 
   useEffect(() => {
-    if (mode === 'edit' && activeId !== null) {
-      getUser(activeId).then((res) => {
-        if (res) {
-          setFormState(res);
-        } else {
-          setFormState(initialState);
-        }
-      });
-    } else if (mode === 'add') {
-      onResetForm();
+    if (isModalOpen) {
+      if (mode === 'add') {
+        onResetForm();
+      } else if ((mode === 'edit' || mode === 'delete') && activeId !== null) {
+        getUser(activeId).then((res) => {
+          if (res) {
+            setFormState(res);
+          } else {
+            setFormState(initialState);
+          }
+        });
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode]);
+  }, [isModalOpen, mode, activeId]);
 
   if (mode === 'delete') {
     return (
@@ -170,7 +173,7 @@ export default function CustomModal({
       centered
       footer={null}
     >
-      <Title level={5} style={{ fontWeight: 400 }}>
+      <Title level={5} className={styles.title}>
         {mode === 'add' ? 'Agregar usuario' : 'Editar usuario'}
       </Title>
       <Divider style={{ margin: '1rem 0' }} />
@@ -194,9 +197,9 @@ export default function CustomModal({
           />
         )}
 
-        <Divider style={{ margin: '1rem 0' }} />
+        <Divider className={styles.divider} />
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <div className={styles['btn-container']}>
           <Button type='primary' htmlType='submit'>
             {mode === 'add' ? 'Agregar usuario' : 'Editar usuario'}
           </Button>
