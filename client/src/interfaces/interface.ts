@@ -4,11 +4,25 @@ export interface User {
   id: number;
   lastname: string;
   name: string;
-  status: Status;
+  status: 'active' | 'inactive';
   username: string;
 }
 
-export enum Status {
-  Active = 'active',
-  Inactive = 'inactive',
+export interface DataType {
+  id: number;
+  username: string;
+  name: string;
+  lastname: string;
+  status: string;
 }
+
+// TYPES ------------------------------------------------------------------
+
+export type FormState = {
+  username: string;
+  email: string;
+  name: string;
+  lastname: string;
+  status: 'active' | 'inactive';
+  age: number;
+};
