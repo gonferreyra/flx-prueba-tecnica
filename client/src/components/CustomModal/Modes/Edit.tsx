@@ -14,10 +14,6 @@ export default function EditModeComponent({
   onSelectChange,
   onInputChange,
 }: EditModeComponentProps) {
-  // if (!formState) {
-  //   return null;
-  // }
-
   return (
     <div>
       <FieldGroup>

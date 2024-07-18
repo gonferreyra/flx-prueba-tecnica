@@ -1,5 +1,8 @@
 import { Button, Divider, Modal, Typography } from 'antd';
 import { FormState } from '../../../interfaces/interface';
+
+import styles from './Delete.module.css';
+
 const { Title } = Typography;
 
 type DeleteModeProps = {
@@ -14,7 +17,6 @@ export default function DeleteModeComponent({
   formState,
   isModalOpen,
   handleCloseModal,
-
   onUserDelete,
   activeId,
 }: DeleteModeProps) {
@@ -25,16 +27,18 @@ export default function DeleteModeComponent({
       onCancel={handleCloseModal}
       footer={null}
     >
-      <Title level={5} style={{ fontWeight: 400 }}>
+      <Title level={5} className={styles.title}>
         Eliminar usuario
       </Title>
       <Divider style={{ margin: '1rem 0' }} />
-      <p style={{ padding: '2rem 0' }}>
-        Esta seguro que quiere eliminar el usuario{' '}
-        <span>@{formState.username}</span>{' '}
+
+      <p className={styles.text}>
+        Esta seguro que quiere eliminar el usuario
+        <span className={styles.span}> @{formState.username}</span>
       </p>
-      <Divider style={{ margin: '1rem 0' }} />
-      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '2rem' }}>
+
+      <Divider className={styles.divider} />
+      <div className={styles['btn-container']}>
         <Button type='primary' htmlType='submit' onClick={handleCloseModal}>
           Cancelar
         </Button>
