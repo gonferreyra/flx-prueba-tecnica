@@ -1,33 +1,23 @@
-import { Space, Table, Tag } from 'antd';
+import { Space, Table, Tag, Pagination } from 'antd';
 import { ColumnsType } from 'antd/es/table';
+import { useModalContext, useUsersContext } from '../../lib/hooks';
+import CustomModal from '../CustomModal/CustomModal';
+import { DataType } from '../../interfaces/interface';
 
 import styles from './UsersTable.module.css';
-import { useUsersContext } from '../../lib/hooks';
-// import { useState } from 'react';
-import CustomModal from '../CustomModal/CustomModal';
 
-interface DataType {
-  id: number;
-  username: string;
-  name: string;
-  lastname: string;
-  status: string;
-}
-
-type UsersTableProps = {
-  isModalOpen: boolean;
-  mode: string;
-  handleOpenModal: (mode: string) => void;
-  handleCloseModal: () => void;
-};
-
-export default function UsersTable({
-  isModalOpen,
-  mode,
-  handleOpenModal,
-  handleCloseModal,
-}: UsersTableProps) {
-  const { users, handleActiveIdChange, isLoading } = useUsersContext();
+export default function UsersTable() {
+  const {
+    handleActiveIdChange,
+    isLoading,
+    handleTableChange,
+    setCurrentPage,
+    usersLength,
+    usersPaginated,
+    currentPage,
+  } = useUsersContext();
+  const { isModalOpen, mode, handleOpenModal, handleCloseModal } =
+    useModalContext();
 
   const columns: ColumnsType<DataType> = [
     {
@@ -67,7 +57,6 @@ export default function UsersTable({
           <a
             onClick={() => {
               handleActiveIdChange(record.id);
-              // console.log(record.id);
               handleOpenModal('edit');
             }}
           >
@@ -77,7 +66,6 @@ export default function UsersTable({
             onClick={() => {
               handleActiveIdChange(record.id);
               handleOpenModal('delete');
-              // console.log(record.id);
             }}
           >
             Eliminar
@@ -92,11 +80,21 @@ export default function UsersTable({
     <>
       <Table
         rowKey={(record) => record.id}
-        dataSource={users}
+        dataSource={usersPaginated}
         columns={columns}
         className={styles.table}
-        pagination={{ pageSize: 9 }}
+        pagination={false}
         loading={isLoading}
+        onChange={handleTableChange}
+      />
+
+      <Pagination
+        current={currentPage}
+        total={usersLength}
+        pageSize={10}
+        onChange={(page) => setCurrentPage(page)}
+        style={{ margin: '2rem 0', display: 'flex', justifyContent: 'end' }}
+        showSizeChanger={false}
       />
 
       {isModalOpen && mode === 'edit' ? (
@@ -105,13 +103,13 @@ export default function UsersTable({
           mode={'edit'}
           handleCloseModal={handleCloseModal}
         />
-      ) : (
+      ) : mode === 'delete' ? (
         <CustomModal
           isModalOpen={isModalOpen}
           mode={'delete'}
           handleCloseModal={handleCloseModal}
         />
-      )}
+      ) : null}
     </>
   );
 }
