@@ -141,10 +141,7 @@ export default function UsersContextProvider({
     }
   }, [filteredAndSortedUsers, currentPage, limit, isInitialLoading]);
 
-  // Ver el timeout para esta funcion
   const getUser = async (id: number) => {
-    // if (id === currentUser?.id) return;
-
     dispatch({ type: 'isLoading' });
 
     try {
