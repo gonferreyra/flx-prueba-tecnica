@@ -12,8 +12,7 @@ const { Search } = Input;
 export default function UsersControlPanel() {
   const { searchText, handleChangeSearchText } = useSearchTextContext();
   const { sortBy, handleChangeSortBy } = useUsersContext();
-  const { isModalOpen, mode, handleOpenModal, handleCloseModal } =
-    useModalContext();
+  const { isModalOpen, mode, handleOpenModal } = useModalContext();
 
   return (
     <>
@@ -47,13 +46,7 @@ export default function UsersControlPanel() {
         </Button>
       </div>
 
-      {isModalOpen && mode === 'add' && (
-        <CustomModal
-          isModalOpen={isModalOpen}
-          mode={'add'}
-          handleCloseModal={handleCloseModal}
-        />
-      )}
+      {isModalOpen && mode === 'add' && <CustomModal />}
     </>
   );
 }

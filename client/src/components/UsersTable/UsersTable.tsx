@@ -16,8 +16,7 @@ export default function UsersTable() {
     usersPaginated,
     currentPage,
   } = useUsersContext();
-  const { isModalOpen, mode, handleOpenModal, handleCloseModal } =
-    useModalContext();
+  const { isModalOpen, handleOpenModal } = useModalContext();
 
   const columns: ColumnsType<DataType> = [
     {
@@ -93,23 +92,11 @@ export default function UsersTable() {
         total={usersLength}
         pageSize={10}
         onChange={(page) => setCurrentPage(page)}
-        style={{ margin: '2rem 0', display: 'flex', justifyContent: 'end' }}
+        className={styles.pagination}
         showSizeChanger={false}
       />
 
-      {isModalOpen && mode === 'edit' ? (
-        <CustomModal
-          isModalOpen={isModalOpen}
-          mode={'edit'}
-          handleCloseModal={handleCloseModal}
-        />
-      ) : mode === 'delete' ? (
-        <CustomModal
-          isModalOpen={isModalOpen}
-          mode={'delete'}
-          handleCloseModal={handleCloseModal}
-        />
-      ) : null}
+      {isModalOpen && <CustomModal />}
     </>
   );
 }

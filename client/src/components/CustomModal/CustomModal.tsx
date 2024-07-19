@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useForm, useUsersContext } from '../../lib/hooks';
+import { useForm, useModalContext, useUsersContext } from '../../lib/hooks';
 import { Divider, Modal, Typography, Button, Form, message } from 'antd';
 import { User, FormState } from '../../interfaces/interface';
 import DeleteModeComponent from './Modes/Delete';
@@ -11,12 +11,6 @@ import styles from './CustomModal.module.css';
 
 const { Title } = Typography;
 
-type CustomModalProps = {
-  isModalOpen: boolean;
-  mode: string;
-  handleCloseModal: () => void;
-};
-
 const initialState: FormState = {
   username: '',
   email: '',
@@ -26,13 +20,10 @@ const initialState: FormState = {
   age: 0,
 };
 
-export default function CustomModal({
-  isModalOpen,
-  mode,
-  handleCloseModal,
-}: CustomModalProps) {
+export default function CustomModal() {
   const { getUser, activeId, createUser, users, deleteUser, updateUser } =
     useUsersContext();
+  const { isModalOpen, mode, handleCloseModal } = useModalContext();
 
   const {
     formState,
@@ -43,8 +34,6 @@ export default function CustomModal({
   } = useForm<FormState>(initialState);
 
   const { username, email, name, lastname, status, age } = formState;
-
-  // console.log(formState);
 
   const handleSubmit = async () => {
     // validations
