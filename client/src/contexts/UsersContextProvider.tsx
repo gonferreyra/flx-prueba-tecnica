@@ -108,23 +108,21 @@ export default function UsersContextProvider({
 
   // Fetch initial data
   useEffect(() => {
-    setTimeout(() => {
-      const fetchUsers = async () => {
-        try {
-          const resp = await fetch(baseURL);
-          const data = await resp.json();
-          dispatch({ type: 'users/loaded', payload: data });
-          dispatch({ type: 'initialLoading' });
-        } catch (error) {
-          dispatch({
-            type: 'rejected',
-            payload: 'There was an error loading data',
-          });
-        }
-      };
+    const fetchUsers = async () => {
+      try {
+        const resp = await fetch(baseURL);
+        const data = await resp.json();
+        dispatch({ type: 'users/loaded', payload: data });
+        dispatch({ type: 'initialLoading' });
+      } catch (error) {
+        dispatch({
+          type: 'rejected',
+          payload: 'There was an error loading data',
+        });
+      }
+    };
 
-      fetchUsers();
-    }, 500);
+    fetchUsers();
   }, [baseURL]);
 
   // Handle pagination
@@ -139,7 +137,7 @@ export default function UsersContextProvider({
           start + limit
         );
         dispatch({ type: 'users/paginated', payload: paginatedData });
-      }, 1000);
+      }, 1500);
     }
   }, [filteredAndSortedUsers, currentPage, limit, isInitialLoading]);
 
