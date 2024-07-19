@@ -60,6 +60,12 @@ export default function CustomModal({
       return;
     }
 
+    // check if username is unique
+    if (users.some((user) => user.username === username)) {
+      message.error('The username is already registered in the database');
+      return;
+    }
+
     // Generate a number uuid
     const numberId = generateUUID();
 
@@ -116,9 +122,15 @@ export default function CustomModal({
       return;
     }
 
-    // Validación de la longitud de los campos (ejemplo: máximo 50 caracteres para nombre y apellido)
+    // Max length validation
     if (name.length > 25 || lastname.length > 25) {
       message.error('Name and Lastname must be 25 characters or less');
+      return;
+    }
+
+    // check if username is unique
+    if (users.some((user) => user.username === username)) {
+      message.error('The username is already registered in the database');
       return;
     }
 
